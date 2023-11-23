@@ -95,8 +95,15 @@ class StartViewActivity : AppCompatActivity() {
                 dayOfWeek= DayOfWeek(date)
             }
             date=DateTrans(date)
-            var max_temp=jsonObject.getString("tempMax")+"°"
-            var min_temp=jsonObject.getString("tempMin")+"°"
+            var max_temp=""
+            var min_temp=""
+            if(Metric.flag=="华氏度"){
+                max_temp=(jsonObject.getString("tempMax").toInt()*1.8+32).toString()+"°F"
+                min_temp=(jsonObject.getString("tempMin").toInt()*1.8+32).toString()+"°F"
+            }else{
+                max_temp=jsonObject.getString("tempMax")+"°C"
+                min_temp=jsonObject.getString("tempMin")+"°C"
+            }
             var textDay=jsonObject.getString("textDay")
             var textNight=jsonObject.getString("textNight")
             var iconDay=jsonObject.getString("iconDay")

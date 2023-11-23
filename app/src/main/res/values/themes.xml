@@ -2,13 +2,24 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Thirdexperiment" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">false</item>
-
+        <item name="android:actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
+        <item name="android:itemTextAppearance">@style/AppTheme.MenuTextAppearance</item>
     </style>
 
     <style name="Theme.Thirdexperiment" parent="Base.Theme.Thirdexperiment" >
         <item name="colorPrimary">@color/blue</item>
+        <item name="android:textColorPrimary">@color/yellow</item>
     </style>
+
+    <style name="AppTheme.MenuTextAppearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="MyOverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/white</item>
+    </style>
+
+
 </resources>

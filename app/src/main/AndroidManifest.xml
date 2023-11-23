@@ -44,6 +44,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:logo="@drawable/icon"
             android:exported="true" />
         <activity
             android:name=".SettingsActivity"

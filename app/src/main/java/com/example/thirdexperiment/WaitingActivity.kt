@@ -18,19 +18,19 @@ class WaitingActivity : AppCompatActivity() {
     private lateinit var city:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         binding=ActivityWaitingBinding.inflate(layoutInflater)
         dbHelper= MyDataBaseHelper(this,"database.db",1)
         var db=dbHelper.writableDatabase
         db.execSQL("delete from weather")
-        city= intent.getStringExtra("location").toString()
-//        Log.d("Waiting", city)
         WeatherList.clear()
         setContentView(binding.root)
-        webGetCityCode(city)
+        Log.d("Waiting",Location.city+" "+Location.district)
+        webGetCityCode(Location.city)
     }
 
     private fun webGetCityCode(city:String) {
-        var getCityCodeUrl = CityCodeAPI.url + CityCodeAPI.location + city + CityCodeAPI.key
+        var getCityCodeUrl = CityCodeAPI.url + CityCodeAPI.location + Location.district + CityCodeAPI.key
         HttpUtil.sendHttpRequest(getCityCodeUrl, object : HttpCallbackListener {
             override fun onFinish(response: String) {
                 val begin = response.indexOf("[")
@@ -38,7 +38,7 @@ class WaitingActivity : AppCompatActivity() {
                 var data = response.substring(begin..end)
                 val jsonArray = JSONArray(data)
                 for (i in 0 until jsonArray.length()) {
-                    if (jsonArray.getJSONObject(i).getString("name") == city) {
+                    if (jsonArray.getJSONObject(i).getString("adm2") in city) {
                         Log.d("CityCode", jsonArray.getJSONObject(i).getString("id"))
                         webGetWeather(jsonArray.getJSONObject(i).getString("id"))
                         break
@@ -71,6 +71,7 @@ class WaitingActivity : AppCompatActivity() {
         })
     }
     private fun parseJSONWithJSONObject(jsonData: String):Boolean{
+
         val begin=jsonData.indexOf("[")
         val end=jsonData.lastIndexOf("]")
         var data=jsonData.substring(begin..end)
@@ -88,8 +89,15 @@ class WaitingActivity : AppCompatActivity() {
                 dayOfWeek= DayOfWeek(date)
             }
             date=DateTrans(date)
-            var max_temp=jsonObject.getString("tempMax")+"°"
-            var min_temp=jsonObject.getString("tempMin")+"°"
+            var max_temp=""
+            var min_temp=""
+            if(Metric.flag=="华氏度"){
+                max_temp=Math.round((jsonObject.getString("tempMax").toInt()*1.8+32)).toString()+"°F"
+                min_temp=Math.round((jsonObject.getString("tempMin").toInt()*1.8+32)).toString()+"°F"
+            }else{
+                max_temp=jsonObject.getString("tempMax")+"°C"
+                min_temp=jsonObject.getString("tempMin")+"°C"
+            }
             var textDay=jsonObject.getString("textDay")
             var textNight=jsonObject.getString("textNight")
             var iconDay=jsonObject.getString("iconDay")
@@ -103,6 +111,7 @@ class WaitingActivity : AppCompatActivity() {
             var weather=Weather(dayOfWeek,date,iconDay,iconNight,max_temp,min_temp,textDay,textNight,windSpeedDay,windSpeedNight,windDirDay,windDirNight,humidity,pressure)
             WeatherList.add(weather)
             InsertDataBase(weather)
+            Log.d("InsertDatabase","Inserted one value")
         }
         return true
     }
