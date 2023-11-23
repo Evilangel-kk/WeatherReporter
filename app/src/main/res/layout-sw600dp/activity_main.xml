@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/weatherListLayout"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <fragment
+        android:id="@+id/weatherListFrag"
+        android:name="com.example.thirdexperiment.WeatherListFragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+    <FrameLayout
+        android:id="@+id/weatherContentLayout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3" >
+        <fragment
+            android:id="@+id/weatherContentFrag"
+            android:name="com.example.thirdexperiment.WeatherContentFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+</LinearLayout>
