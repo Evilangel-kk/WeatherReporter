@@ -1,7 +1,11 @@
 package com.example.thirdexperiment
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -30,6 +34,7 @@ class StartViewActivity : AppCompatActivity() {
         dbHelper= MyDataBaseHelper(this,"database.db",1)
         var db=dbHelper.writableDatabase
         setContentView(binding.root)
+        createNotificationChannel()
         city="长沙"
         db.execSQL("delete from weather")
         webGetCityCode(city)
@@ -165,5 +170,19 @@ class StartViewActivity : AppCompatActivity() {
         val outputFormat = SimpleDateFormat("MMM d", Locale.ENGLISH)
         val date = inputFormat.parse(time)
         return outputFormat.format(date)
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "R.string.channel_name"
+            val descriptionText = "R.string.channel_description"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("weather_channel", name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }

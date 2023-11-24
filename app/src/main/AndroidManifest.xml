@@ -37,6 +37,11 @@
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" /> <!-- 允许读设备等信息，用于问题排查 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--  通知权限  -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.CHANNEL_ID"/>
+
 
     <application
         android:allowBackup="true"
@@ -80,6 +85,10 @@
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
+
+        <service android:name=".WeatherService" />
+        <receiver android:name=".WeatherBroadcastReceiver" />
+        <receiver android:name=".NotificationDeleteReceiver"/>
     </application>
 
 </manifest>

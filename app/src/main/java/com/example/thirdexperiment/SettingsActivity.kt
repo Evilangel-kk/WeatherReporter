@@ -1,7 +1,12 @@
 package com.example.thirdexperiment
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Binder
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.MenuItem
 import android.widget.RadioButton
@@ -21,10 +26,9 @@ import com.lljjcoder.style.citypickerview.CityPickerView
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding:ActivitySettingsBinding
     private lateinit var location:String
-    private lateinit var temperatureUnits:String
-    private var notify:Boolean=false
-    private val REQUEST_CODE_PICK_CITY = 0
     private val mPicker = CityPickerView()
+    private lateinit var service: WeatherService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.title="settings"
@@ -103,11 +107,37 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.save.setOnClickListener {
+            val serviceIntent = Intent(this, WeatherService::class.java)
+            bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+
+            if(Switch.status){
+                val intent = Intent(this, WeatherService::class.java)
+                startService(intent)
+            }else{
+//                val intent = Intent(this, WeatherService::class.java)
+//                startService(intent)
+                unbindService(serviceConnection)
+                if(service!=null){
+                    service.stopSelf()
+                }
+            }
+
             var intent=Intent(this,WaitingActivity::class.java)
             startActivity(intent)
         }
-
     }
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+            val serviceBinder = binder as Binder
+            service = (serviceBinder as WeatherService.WeatherServiceBinder).getService()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            // Do nothing
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {

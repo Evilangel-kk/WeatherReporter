@@ -1,9 +1,14 @@
 package com.example.thirdexperiment
 
+import android.content.ComponentName
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Binder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import com.example.thirdexperiment.databinding.ActivityWaitingBinding
 import org.json.JSONArray
@@ -15,7 +20,7 @@ import java.util.Locale
 class WaitingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWaitingBinding
     private lateinit var dbHelper:MyDataBaseHelper
-    private lateinit var city:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
@@ -25,9 +30,14 @@ class WaitingActivity : AppCompatActivity() {
         db.execSQL("delete from weather")
         WeatherList.clear()
         setContentView(binding.root)
+
+
+
         Log.d("Waiting",Location.city+" "+Location.district)
         webGetCityCode(Location.city)
     }
+
+
 
     private fun webGetCityCode(city:String) {
         var getCityCodeUrl = CityCodeAPI.url + CityCodeAPI.location + Location.district + CityCodeAPI.key
