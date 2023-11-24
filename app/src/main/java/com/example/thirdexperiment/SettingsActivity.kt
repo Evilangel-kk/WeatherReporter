@@ -122,14 +122,11 @@ class SettingsActivity : AppCompatActivity() {
             bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
 
             if(Switch.status){
-//                MyApplication.weatherService.startService()
-                service?.startService() // 开关开启，打开通知服务
+                MyApplication.weatherService?.startService()
             }else{
                 Log.d(TAG, "用户关闭了通知")
-//                service?.stopSelf()
-                service?.stopService() // 开关关闭，关闭通知服务
-//                MyApplication.weatherService.stopService()
-//                MyApplication.weatherService=null // 全局service置空
+                MyApplication.weatherService?.stopService()// 开关关闭，关闭通知服务
+                MyApplication.weatherService=null // 全局service置空
             }
 
             // 跳转到过渡界面
@@ -143,7 +140,7 @@ class SettingsActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
             val serviceBinder = binder as Binder
             service = (serviceBinder as WeatherService.WeatherServiceBinder).getService()
-            MyApplication.weatherService= service as WeatherService
+            MyApplication.weatherService = service as WeatherService
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {

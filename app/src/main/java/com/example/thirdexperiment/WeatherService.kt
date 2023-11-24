@@ -31,16 +31,11 @@ class WeatherService: Service() {
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "onCreate: ")
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy: ")
-        // 取消定时任务
-        val intent = Intent(this, WeatherBroadcastReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        alarmManager.cancel(pendingIntent)
     }
 
     fun startService() {
@@ -60,6 +55,9 @@ class WeatherService: Service() {
     fun stopService() {
         // 停止服务的逻辑
         Log.d(TAG, "stopService: ")
-        stopSelf()
+        // 取消定时任务
+        val intent = Intent(this, WeatherBroadcastReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        alarmManager.cancel(pendingIntent)
     }
 }
