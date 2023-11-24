@@ -40,6 +40,8 @@ class WaitingActivity : AppCompatActivity() {
                 for (i in 0 until jsonArray.length()) {
                     if (jsonArray.getJSONObject(i).getString("adm2") in city) {
                         Log.d("CityCode", jsonArray.getJSONObject(i).getString("id"))
+                        Location.lat=jsonArray.getJSONObject(i).getString("lat")
+                        Location.lon=jsonArray.getJSONObject(i).getString("lon")
                         webGetWeather(jsonArray.getJSONObject(i).getString("id"))
                         break
                     }

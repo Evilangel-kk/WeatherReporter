@@ -47,6 +47,8 @@ class StartViewActivity : AppCompatActivity() {
                 for (i in 0 until jsonArray.length()) {
                     if (jsonArray.getJSONObject(i).getString("name") == city) {
                         Log.d("CityCode", jsonArray.getJSONObject(i).getString("id"))
+                        Location.lat=jsonArray.getJSONObject(i).getString("lat")
+                        Location.lon=jsonArray.getJSONObject(i).getString("lon")
                         webGetWeather(jsonArray.getJSONObject(i).getString("id"))
                         break
                     }

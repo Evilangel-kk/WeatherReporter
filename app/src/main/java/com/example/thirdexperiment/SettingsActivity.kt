@@ -47,6 +47,8 @@ class SettingsActivity : AppCompatActivity() {
             binding.hsd.isChecked=true;
         }
 
+        binding.switchNotify.isChecked=Switch.status
+
         binding.editSelectedCity.text=Location.province+"-"+Location.city+"-"+Location.district
 
         binding.editSelectedCity.setOnClickListener{
@@ -71,12 +73,6 @@ class SettingsActivity : AppCompatActivity() {
                     Location.province=province.toString()
                     Location.city=city.toString()
                     Location.district=district.toString()
-//                    if("区" in district.toString()){
-//                        Location.place=district.toString().split("区")[0]
-//                    }else if("市" in district.toString()){
-//                        Location.place=district.toString().split("市")[0]
-//                    }
-
                     location=""+province+"-"+city+"-"+district
                     binding.editSelectedCity.text=location
                 }
@@ -101,10 +97,16 @@ class SettingsActivity : AppCompatActivity() {
             }
         })
 
+        binding.switchNotify.setOnCheckedChangeListener{_, isChecked ->
+            // 处理开关状态改变事件
+            Switch.status = isChecked
+        }
+
         binding.save.setOnClickListener {
             var intent=Intent(this,WaitingActivity::class.java)
             startActivity(intent)
         }
+
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

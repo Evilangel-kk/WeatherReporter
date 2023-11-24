@@ -55,5 +55,10 @@ dependencies {
 
     implementation ("com.github.crazyandcoder:citypicker:6.0.2")
 
+//    implementation ("com.amap.api:location:6.4.0")
+    implementation ("com.amap.api:map2d:latest.integration")
+    implementation ("com.amap.api:search:9.7.0")
+    implementation ("com.tencent.bugly:nativecrashreport:3.8.0")
+
 
 }

@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.settings -> startActivity(Intent(this,SettingsActivity::class.java))
-//            R.id.MapLocation -> startActivity(Intent(this,MapLocationActivity::class.java))
+            R.id.MapLocation -> startActivity(Intent(this,AmapActivity::class.java))
             else -> {}
         }
         return super.onOptionsItemSelected(item)
