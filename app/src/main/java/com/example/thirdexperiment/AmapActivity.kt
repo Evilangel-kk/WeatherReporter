@@ -10,7 +10,9 @@ import com.amap.api.maps2d.MapView
 import com.amap.api.maps2d.model.LatLng
 import com.example.thirdexperiment.databinding.ActivityAmapBinding
 
-
+/*
+* AmapActivity页面用于展示地图
+* 高德API获取地图*/
 class AmapActivity : AppCompatActivity() {
     private lateinit var binding:ActivityAmapBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +22,7 @@ class AmapActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.map.onCreate(savedInstanceState) // 此方法必须重写
         binding.map.map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(Location.lat.toDouble(), Location.lon.toDouble()), 12f))
+        // 添加返回按钮
         val actionBar: ActionBar? = supportActionBar
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true)

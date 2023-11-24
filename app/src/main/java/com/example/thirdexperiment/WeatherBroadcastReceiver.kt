@@ -12,6 +12,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
+/*
+* 通知发送广播
+* 接收到广播后就发送消息*/
 class WeatherBroadcastReceiver:BroadcastReceiver() {
     private val TAG="WeatherBroadcastReceiver"
     override fun onReceive(context: Context?, intent: Intent?) {

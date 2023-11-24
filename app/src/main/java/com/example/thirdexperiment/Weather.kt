@@ -2,6 +2,8 @@ package com.example.thirdexperiment
 
 import java.io.Serializable
 
+/*
+* 天气类*/
 class Weather(dayOfWeek:String,date:String,iconDay:String,iconNight:String,max_temp:String,min_temp:String,textDay:String,textNight:String,windSpeedDay:String,windSpeedNight:String,windDirDay:String,windDirNight:String,humidity:String,pressure:String):
     Serializable {
     var dayOfWeek:String=dayOfWeek // 星期

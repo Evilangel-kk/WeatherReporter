@@ -22,13 +22,15 @@ import com.lljjcoder.citywheel.CityConfig
 import com.lljjcoder.style.citylist.Toast.ToastUtils
 import com.lljjcoder.style.citypickerview.CityPickerView
 
-
+/*
+* settings界面
+* 利用CityPickerView开源库引入城市选择的控件*/
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding:ActivitySettingsBinding
     private lateinit var location:String
     private val mPicker = CityPickerView()
     private var service: WeatherService? = null
-
+    private var TAG="SettingsActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.title="settings"
@@ -42,13 +44,14 @@ class SettingsActivity : AppCompatActivity() {
             actionBar.setHomeButtonEnabled(true)
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
-
+        // 判断全局service是否已经存在，不存在就进行绑定
         if(MyApplication.weatherService==null){
             val serviceIntent = Intent(this, WeatherService::class.java)
             startService(serviceIntent)
             bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+            MyApplication.weatherService=WeatherService()
         }
-
+        // 单选框设置默认值
         if(Metric.flag=="摄氏度"){
             binding.ssd.isChecked=true;
             binding.hsd.isChecked=false;
@@ -56,15 +59,16 @@ class SettingsActivity : AppCompatActivity() {
             binding.ssd.isChecked=false;
             binding.hsd.isChecked=true;
         }
-
+        // 开关设置默认值
         binding.switchNotify.isChecked=Switch.status
-
+        // 三级架构城市设置默认值
         binding.editSelectedCity.text=Location.province+"-"+Location.city+"-"+Location.district
 
+        // 为editview添加点击事件
         binding.editSelectedCity.setOnClickListener{
-            //添加默认的配置，不需要自己定义，当然也可以自定义相关熟悉，详细属性请看demo
+            //添加默认的配置
             val cityConfig = CityConfig.Builder()
-                .setCityWheelType(CityConfig.WheelType.PRO_CITY_DIS)
+                .setCityWheelType(CityConfig.WheelType.PRO_CITY_DIS)// PRO_CITY_DIS显示的是三级，PRO_CITY是两级，PRO只有省份
                 .province(Location.province)//默认显示的省份
                 .city(Location.city)//默认显示省份下面的城市
                 .district(Location.district)//默认显示省市下面的区县数据
@@ -73,13 +77,11 @@ class SettingsActivity : AppCompatActivity() {
             //监听选择点击事件及返回结果
             mPicker.setOnCityItemClickListener(object : OnCityItemClickListener() {
                 override fun onSelected(
-                    province: ProvinceBean?,
-                    city: CityBean?,
-                    district: DistrictBean?
+                    province: ProvinceBean?,//省份province
+                    city: CityBean?,//城市city
+                    district: DistrictBean?//地区district
                 ) {
-                    //省份province
-                    //城市city
-                    //地区district
+                    // 对静态地址进行更改
                     Location.province=province.toString()
                     Location.city=city.toString()
                     Location.district=district.toString()
@@ -95,6 +97,7 @@ class SettingsActivity : AppCompatActivity() {
             mPicker.showCityPicker()
         }
 
+        // 为单选框组添加选项更改事件
         binding.radioGroup.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group, checkedId ->
             val radioButton = findViewById<RadioButton>(checkedId)
             val selectedOption = radioButton.text.toString()
@@ -107,38 +110,40 @@ class SettingsActivity : AppCompatActivity() {
             }
         })
 
+        // 为开关添加更改事件
         binding.switchNotify.setOnCheckedChangeListener{_, isChecked ->
             // 处理开关状态改变事件
             Switch.status = isChecked
         }
 
+        // 为保存button添加点击事件
         binding.save.setOnClickListener {
             val serviceIntent = Intent(this, WeatherService::class.java)
             bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
 
             if(Switch.status){
-                service?.startService()
+//                MyApplication.weatherService.startService()
+                service?.startService() // 开关开启，打开通知服务
             }else{
-//                val intent = Intent(this, WeatherService::class.java)
-//                startService(intent)
-//                unbindService(serviceConnection)
-//                if(service!=null){
-//                    service.stopSelf()
-//                }
-                service?.stopService()
-                MyApplication.weatherService=null
+                Log.d(TAG, "用户关闭了通知")
+//                service?.stopSelf()
+                service?.stopService() // 开关关闭，关闭通知服务
+//                MyApplication.weatherService.stopService()
+//                MyApplication.weatherService=null // 全局service置空
             }
 
+            // 跳转到过渡界面
             var intent=Intent(this,WaitingActivity::class.java)
             startActivity(intent)
         }
     }
 
+    // 绑定Activity和Service
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
             val serviceBinder = binder as Binder
             service = (serviceBinder as WeatherService.WeatherServiceBinder).getService()
-            MyApplication.weatherService=service
+            MyApplication.weatherService= service as WeatherService
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {

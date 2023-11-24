@@ -1,5 +1,7 @@
 package com.example.thirdexperiment
 
+/*
+* 和风天气获取城市编码信息的url属性*/
 object CityCodeAPI {
     val url="https://geoapi.qweather.com/v2/city/lookup?"
     val location="location="

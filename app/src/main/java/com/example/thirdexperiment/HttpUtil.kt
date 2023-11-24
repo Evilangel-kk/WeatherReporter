@@ -6,6 +6,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.concurrent.thread
 
+/*
+* 封装网络请求的调用*/
 object HttpUtil {
     fun sendHttpRequest(address: String, listener: HttpCallbackListener) {
         thread {

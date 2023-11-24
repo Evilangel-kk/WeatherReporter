@@ -9,7 +9,8 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thirdexperiment.databinding.ActivityWeatherContentBinding
 
-
+/*
+* 天气细节Activity*/
 class WeatherContentActivity : AppCompatActivity() {
     private lateinit var binding:ActivityWeatherContentBinding
     companion object {

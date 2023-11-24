@@ -1,14 +1,9 @@
 package com.example.thirdexperiment
 
-import android.content.ComponentName
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
-import android.os.Binder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import com.example.thirdexperiment.databinding.ActivityWaitingBinding
 import org.json.JSONArray
@@ -17,6 +12,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+/*
+* 过渡页面
+* 在settings选型保存更改后进行重新数据获取*/
 class WaitingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWaitingBinding
     private lateinit var dbHelper:MyDataBaseHelper
@@ -27,28 +25,24 @@ class WaitingActivity : AppCompatActivity() {
         binding=ActivityWaitingBinding.inflate(layoutInflater)
         dbHelper= MyDataBaseHelper(this,"database.db",1)
         var db=dbHelper.writableDatabase
-        db.execSQL("delete from weather")
+        db.execSQL("delete from weather") // 数据库清空，再次插入就是最新的数据
         WeatherList.clear()
         setContentView(binding.root)
-
-
-
         Log.d("Waiting",Location.city+" "+Location.district)
-        webGetCityCode(Location.city)
+        webGetCityCode()
     }
 
-
-
-    private fun webGetCityCode(city:String) {
+    private fun webGetCityCode() {
         var getCityCodeUrl = CityCodeAPI.url + CityCodeAPI.location + Location.district + CityCodeAPI.key
         HttpUtil.sendHttpRequest(getCityCodeUrl, object : HttpCallbackListener {
             override fun onFinish(response: String) {
+                // 简单操作处理字符串，方便jsonObject直接分类
                 val begin = response.indexOf("[")
                 val end = response.lastIndexOf("]")
                 var data = response.substring(begin..end)
                 val jsonArray = JSONArray(data)
                 for (i in 0 until jsonArray.length()) {
-                    if (jsonArray.getJSONObject(i).getString("adm2") in city) {
+                    if (jsonArray.getJSONObject(i).getString("adm2") in Location.city) {
                         Log.d("CityCode", jsonArray.getJSONObject(i).getString("id"))
                         Location.lat=jsonArray.getJSONObject(i).getString("lat")
                         Location.lon=jsonArray.getJSONObject(i).getString("lon")
@@ -69,13 +63,9 @@ class WaitingActivity : AppCompatActivity() {
         HttpUtil.sendHttpRequest(getWeatherUrl,object:HttpCallbackListener{
             override fun onFinish(response: String) {
                 Log.d("Start",response)
-                var finish=parseJSONWithJSONObject(response)
+                parseJSONWithJSONObject(response)
                 var intent= Intent(this@WaitingActivity,MainActivity::class.java)
                 startActivity(intent)
-//                if(finish){
-//                    var intent= Intent(this@StartViewActivity,MainActivity::class.java)
-//                    startActivity(intent)
-//                }
             }
             override fun onError(e: Exception) {
                 e.printStackTrace()

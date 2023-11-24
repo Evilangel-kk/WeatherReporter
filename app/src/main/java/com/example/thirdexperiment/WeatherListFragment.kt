@@ -16,7 +16,9 @@ import com.example.thirdexperiment.databinding.WeatherListFragBinding
 import com.bumptech.glide.Glide
 import com.caverock.androidsvg.SVG
 import org.json.JSONArray
-
+/*
+* 列表信息的fragment
+* 可用于手机主页面下部以及平板主页面左侧*/
 class WeatherListFragment:Fragment() {
     private lateinit var binding: WeatherListFragBinding
     private var isTwoPane=false
@@ -30,6 +32,7 @@ class WeatherListFragment:Fragment() {
         isTwoPane = activity?.findViewById<View>(R.id.weatherContentLayout) != null
         val layoutManager = LinearLayoutManager(activity)
         binding.weatherListRecyclerView.layoutManager = layoutManager
+        // 配置适配器
         val adapter = NewsAdapter(WeatherList.weather)
         binding.weatherListRecyclerView.adapter = adapter
     }

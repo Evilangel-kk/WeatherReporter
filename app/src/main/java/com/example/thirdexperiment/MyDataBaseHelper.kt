@@ -5,8 +5,13 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
+/*
+* 封装数据库管理工具类
+* 内置数据库SQLite的管理助手
+* 方便成员对数据库进行增删改查*/
 class MyDataBaseHelper(context: AppCompatActivity, name: String, version: Int) :
     SQLiteOpenHelper(context, name, null, version) {
+    // 城市表
     private val createCity = ("create table City (" +
             " id integer primary key," +
             "name text)")

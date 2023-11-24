@@ -10,6 +10,10 @@ import com.caverock.androidsvg.SVG
 import com.example.thirdexperiment.databinding.WeatherContentFragBinding
 import java.io.Serializable
 
+/*
+* 存放天气细节信息的fragment
+* 可以进行复用
+* 适应手机和平板不同宽度设备*/
 class WeatherContentFragment:Fragment() {
     private lateinit var binding: WeatherContentFragBinding
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

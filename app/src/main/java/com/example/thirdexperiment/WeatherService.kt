@@ -8,7 +8,9 @@ import android.nfc.Tag
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
-
+/*
+* 定期发送通知的Service
+* 在规定时间发出广播，告知WeatherBroadcastReceiver要发送通知了*/
 class WeatherService: Service() {
     private lateinit var alarmManager: AlarmManager
     private var TAG="WeatherService"
@@ -51,7 +53,7 @@ class WeatherService: Service() {
         val intent = Intent(this, WeatherBroadcastReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 //        val intervalMillis = (60 * 60 * 1000).toLong() // 每小时触发一次
-        val intervalMillis = (2 * 1000).toLong() // 每5s触发一次
+        val intervalMillis = (2 * 100).toLong() // 每5s触发一次
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), intervalMillis, pendingIntent)
     }
 

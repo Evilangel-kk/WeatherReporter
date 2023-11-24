@@ -19,6 +19,9 @@ import com.example.thirdexperiment.databinding.TodayContentFragBinding
 import com.example.thirdexperiment.databinding.WeatherContentFragBinding
 import java.io.InputStream
 
+/*
+* 只有在手机上才会显示的fragment
+* 展示今天的天气信息*/
 class TodayContentFragment:Fragment() {
     private lateinit var binding:TodayContentFragBinding
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
