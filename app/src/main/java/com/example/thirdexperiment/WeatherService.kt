@@ -29,6 +29,21 @@ class WeatherService: Service() {
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "onCreate: ")
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy: ")
+        // 取消定时任务
+        val intent = Intent(this, WeatherBroadcastReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        alarmManager.cancel(pendingIntent)
+    }
+
+    fun startService() {
+        // 启动服务的逻辑
+        Log.d(TAG, "startService: ")
         // 获取 AlarmManager 实例
         alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 
@@ -40,12 +55,9 @@ class WeatherService: Service() {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), intervalMillis, pendingIntent)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy: ")
-        // 取消定时任务
-        val intent = Intent(this, WeatherBroadcastReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        alarmManager.cancel(pendingIntent)
+    fun stopService() {
+        // 停止服务的逻辑
+        Log.d(TAG, "stopService: ")
+        stopSelf()
     }
 }

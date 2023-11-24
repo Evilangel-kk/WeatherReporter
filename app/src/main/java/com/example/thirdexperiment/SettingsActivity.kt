@@ -27,7 +27,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var binding:ActivitySettingsBinding
     private lateinit var location:String
     private val mPicker = CityPickerView()
-    private lateinit var service: WeatherService
+    private var service: WeatherService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +41,12 @@ class SettingsActivity : AppCompatActivity() {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true)
             actionBar.setDisplayHomeAsUpEnabled(true)
+        }
+
+        if(MyApplication.weatherService==null){
+            val serviceIntent = Intent(this, WeatherService::class.java)
+            startService(serviceIntent)
+            bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
 
         if(Metric.flag=="摄氏度"){
@@ -111,15 +117,16 @@ class SettingsActivity : AppCompatActivity() {
             bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
 
             if(Switch.status){
-                val intent = Intent(this, WeatherService::class.java)
-                startService(intent)
+                service?.startService()
             }else{
 //                val intent = Intent(this, WeatherService::class.java)
 //                startService(intent)
-                unbindService(serviceConnection)
-                if(service!=null){
-                    service.stopSelf()
-                }
+//                unbindService(serviceConnection)
+//                if(service!=null){
+//                    service.stopSelf()
+//                }
+                service?.stopService()
+                MyApplication.weatherService=null
             }
 
             var intent=Intent(this,WaitingActivity::class.java)
@@ -131,6 +138,7 @@ class SettingsActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
             val serviceBinder = binder as Binder
             service = (serviceBinder as WeatherService.WeatherServiceBinder).getService()
+            MyApplication.weatherService=service
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
