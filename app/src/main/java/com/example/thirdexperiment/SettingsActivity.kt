@@ -61,6 +61,11 @@ class SettingsActivity : AppCompatActivity() {
         }
         // 开关设置默认值
         binding.switchNotify.isChecked=Switch.status
+        if(Switch.status){
+            binding.editSelectedNotice.text="open"
+        }else{
+            binding.editSelectedNotice.text="close"
+        }
         // 三级架构城市设置默认值
         binding.editSelectedCity.text=Location.province+"-"+Location.city+"-"+Location.district
 
@@ -114,21 +119,28 @@ class SettingsActivity : AppCompatActivity() {
         binding.switchNotify.setOnCheckedChangeListener{_, isChecked ->
             // 处理开关状态改变事件
             Switch.status = isChecked
+            if(Switch.status){
+                binding.editSelectedNotice.text="open"
+            }else{
+                binding.editSelectedNotice.text="close"
+            }
         }
 
         // 为保存button添加点击事件
         binding.save.setOnClickListener {
-            val serviceIntent = Intent(this, WeatherService::class.java)
-            bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+            if(OldMsg.status!=Switch.status){
+                OldMsg.status=Switch.status
+                val serviceIntent = Intent(this, WeatherService::class.java)
+                bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
 
-            if(Switch.status){
-                MyApplication.weatherService?.startService()
-            }else{
-                Log.d(TAG, "用户关闭了通知")
-                MyApplication.weatherService?.stopService()// 开关关闭，关闭通知服务
-                MyApplication.weatherService=null // 全局service置空
+                if(Switch.status){
+                    MyApplication.weatherService?.startService()
+                }else{
+                    Log.d(TAG, "用户关闭了通知")
+                    MyApplication.weatherService?.stopService()// 开关关闭，关闭通知服务
+                    MyApplication.weatherService=null // 全局service置空
+                }
             }
-
             // 跳转到过渡界面
             var intent=Intent(this,WaitingActivity::class.java)
             startActivity(intent)

@@ -106,8 +106,8 @@ class StartViewActivity : AppCompatActivity() {
             var min_temp=""
             // 根据全局静态的单位设置不同的数值
             if(Metric.flag=="华氏度"){
-                max_temp=(jsonObject.getString("tempMax").toInt()*1.8+32).toString()+"°F"
-                min_temp=(jsonObject.getString("tempMin").toInt()*1.8+32).toString()+"°F"
+                max_temp=Math.round((jsonObject.getString("tempMax").toInt()*1.8+32)).toString()+"°F"
+                min_temp=Math.round((jsonObject.getString("tempMin").toInt()*1.8+32)).toString()+"°F"
             }else{
                 max_temp=jsonObject.getString("tempMax")+"°C"
                 min_temp=jsonObject.getString("tempMin")+"°C"
