@@ -46,6 +46,14 @@ class WaitingActivity : AppCompatActivity() {
                         Log.d("CityCode", jsonArray.getJSONObject(i).getString("id"))
                         Location.lat=jsonArray.getJSONObject(i).getString("lat")
                         Location.lon=jsonArray.getJSONObject(i).getString("lon")
+                        val db=dbHelper.writableDatabase
+                        var values=ContentValues().apply {
+                            put("id",jsonArray.getJSONObject(i).getString("id").toInt())
+                            put("name",Location.province+"&"+Location.city+"&"+Location.district)
+                        }
+                        db.execSQL("delete from City")
+                        db.insert("City", null, values) // 插入数据
+                        Log.d("Waiting...","Inserted one city")
                         webGetWeather(jsonArray.getJSONObject(i).getString("id"))
                         break
                     }

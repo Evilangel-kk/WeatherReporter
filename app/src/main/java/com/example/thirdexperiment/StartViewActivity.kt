@@ -31,10 +31,16 @@ class StartViewActivity : AppCompatActivity() {
         supportActionBar?.hide()
         binding= ActivityStartViewAvtivityBinding.inflate(layoutInflater)
         dbHelper= MyDataBaseHelper(this,"database.db",1)
-        var db=dbHelper.writableDatabase
+        val db=dbHelper.writableDatabase
         setContentView(binding.root)
         createNotificationChannel()
         db.execSQL("delete from weather")
+        val cursor=db.rawQuery("select name from City",null)
+        cursor.moveToNext()
+        val place=cursor.getString(0).split("&")
+        Location.province=place[0]
+        Location.city=place[1]
+        Location.district=place[2]
         WeatherList.weather.clear()
         webGetCityCode()
     }
