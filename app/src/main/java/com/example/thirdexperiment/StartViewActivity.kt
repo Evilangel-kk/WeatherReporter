@@ -47,13 +47,13 @@ class StartViewActivity : AppCompatActivity() {
 
     // 和风天气解析中文地址对应城市编码
     private fun webGetCityCode() {
-        var getCityCodeUrl = CityCodeAPI.url + CityCodeAPI.location + Location.district + CityCodeAPI.key
+        val getCityCodeUrl = CityCodeAPI.url + CityCodeAPI.location + Location.district + CityCodeAPI.key
         HttpUtil.sendHttpRequest(getCityCodeUrl, object : HttpCallbackListener {
             override fun onFinish(response: String) {
                 // 简单操作处理字符串，方便jsonObject直接分类
                 val begin = response.indexOf("[")
                 val end = response.lastIndexOf("]")
-                var data = response.substring(begin..end)
+                val data = response.substring(begin..end)
                 val jsonArray = JSONArray(data)
                 for (i in 0 until jsonArray.length()) {
                     if (jsonArray.getJSONObject(i).getString("adm2") in Location.city) {
@@ -74,12 +74,12 @@ class StartViewActivity : AppCompatActivity() {
 
     // 和风天气API，通过城市编码获取天气数据
     private fun webGetWeather(city:String){
-        var getWeatherUrl=WeatherAPI.url+WeatherAPI.location+city+WeatherAPI.key+WeatherAPI.language
+        val getWeatherUrl=WeatherAPI.url+WeatherAPI.location+city+WeatherAPI.key+WeatherAPI.language
         HttpUtil.sendHttpRequest(getWeatherUrl,object:HttpCallbackListener{
             override fun onFinish(response: String) {
                 Log.d("Start",response)
                 parseJSONWithJSONObject(response)
-                var intent= Intent(this@StartViewActivity,MainActivity::class.java)
+                val intent= Intent(this@StartViewActivity,MainActivity::class.java)
                 startActivity(intent)
             }
             override fun onError(e: Exception) {
@@ -91,7 +91,7 @@ class StartViewActivity : AppCompatActivity() {
     private fun parseJSONWithJSONObject(jsonData: String):Boolean{
         val begin=jsonData.indexOf("[")
         val end=jsonData.lastIndexOf("]")
-        var data=jsonData.substring(begin..end)
+        val data=jsonData.substring(begin..end)
         val jsonArray = JSONArray(data)
 
         for(i in 0 until jsonArray.length()){
@@ -118,17 +118,17 @@ class StartViewActivity : AppCompatActivity() {
                 max_temp=jsonObject.getString("tempMax")+"°C"
                 min_temp=jsonObject.getString("tempMin")+"°C"
             }
-            var textDay=jsonObject.getString("textDay")
-            var textNight=jsonObject.getString("textNight")
-            var iconDay=jsonObject.getString("iconDay")
-            var iconNight=jsonObject.getString("iconNight")
-            var windSpeedDay=jsonObject.getString("windSpeedDay")+" km/h"
-            var windSpeedNight=jsonObject.getString("windSpeedNight")+" km/h"
-            var windDirDay=jsonObject.getString("windDirDay")
-            var windDirNight=jsonObject.getString("windDirNight")
-            var humidity="Humidity: "+jsonObject.getString("humidity")+" %"
-            var pressure="Pressure: "+jsonObject.getString("pressure")+" hPa"
-            var weather=Weather(dayOfWeek,date,iconDay,iconNight,max_temp,min_temp,textDay,textNight,windSpeedDay,windSpeedNight,windDirDay,windDirNight,humidity,pressure)
+            val textDay=jsonObject.getString("textDay")
+            val textNight=jsonObject.getString("textNight")
+            val iconDay=jsonObject.getString("iconDay")
+            val iconNight=jsonObject.getString("iconNight")
+            val windSpeedDay=jsonObject.getString("windSpeedDay")+" km/h"
+            val windSpeedNight=jsonObject.getString("windSpeedNight")+" km/h"
+            val windDirDay=jsonObject.getString("windDirDay")
+            val windDirNight=jsonObject.getString("windDirNight")
+            val humidity="Humidity: "+jsonObject.getString("humidity")+" %"
+            val pressure="Pressure: "+jsonObject.getString("pressure")+" hPa"
+            val weather=Weather(dayOfWeek,date,iconDay,iconNight,max_temp,min_temp,textDay,textNight,windSpeedDay,windSpeedNight,windDirDay,windDirNight,humidity,pressure)
             WeatherList.add(weather)
             InsertDataBase(weather)
         }
@@ -137,7 +137,7 @@ class StartViewActivity : AppCompatActivity() {
 
     // 插入数据库
     private fun InsertDataBase(weather:Weather){
-        var db=dbHelper.writableDatabase
+        val db=dbHelper.writableDatabase
         val values = ContentValues().apply {
             // 开始组装数据
             put("dayOfWeek", weather.dayOfWeek)

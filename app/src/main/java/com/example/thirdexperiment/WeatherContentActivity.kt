@@ -29,10 +29,8 @@ class WeatherContentActivity : AppCompatActivity() {
         binding= ActivityWeatherContentBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val weather = intent.getSerializableExtra("weather") as Weather // 获取传入的天气
-        if (weather != null) {
-            val fragment = supportFragmentManager.findFragmentById(R.id.weatherContentFrag) as WeatherContentFragment
-            fragment.refresh(weather) //刷新WeatherContentFragment界面
-        }
+        val fragment = supportFragmentManager.findFragmentById(R.id.weatherContentFrag) as WeatherContentFragment
+        fragment.refresh(weather) //刷新WeatherContentFragment界面
         val actionBar: ActionBar? = supportActionBar
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true)
@@ -67,16 +65,16 @@ class WeatherContentActivity : AppCompatActivity() {
     }
 
     private fun sendSMS(message: String) {
-        var smsToUri:Uri = Uri.parse("smsto:");
-        var intent = Intent(Intent.ACTION_SENDTO, smsToUri);
+        val smsToUri:Uri = Uri.parse("smsto:");
+        val intent = Intent(Intent.ACTION_SENDTO, smsToUri);
         intent.putExtra("sms_body", message);
         startActivity(intent);
     }
 
     private fun sendEML(message: String){
-        var uri = Uri.parse("mailto:")
-        var email = "2472047312@qq.com"
-        var intent = Intent(Intent.ACTION_SENDTO, uri)
+        val uri = Uri.parse("mailto:2472047312@qq.com")
+        val email = "15834912919@163.com"
+        val intent = Intent(Intent.ACTION_SENDTO, uri)
         intent.putExtra(Intent.EXTRA_CC, email) // 抄送人
         intent.putExtra(Intent.EXTRA_SUBJECT, "Weather Update"); // 主题
         intent.putExtra(Intent.EXTRA_TEXT, message); // 正文
@@ -84,7 +82,7 @@ class WeatherContentActivity : AppCompatActivity() {
     }
 
     private fun getWeatherInfo():String{
-        var w = WeatherList.weather[0];
+        val w = WeatherList.weather[0];
         return w.dayOfWeek+"\nMaxTemp: "+w.max_temp+"\nMinTemp: "+w.min_temp+"\n"+w.textDay
     }
 }
