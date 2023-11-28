@@ -87,6 +87,9 @@ class SettingsActivity : AppCompatActivity() {
                     district: DistrictBean?//地区district
                 ) {
                     // 对静态地址进行更改
+                    if (district != null) {
+                        println(district.id)
+                    }
                     Location.province=province.toString()
                     Location.city=city.toString()
                     Location.district=district.toString()

@@ -12,6 +12,7 @@ import android.util.Log
 import com.example.thirdexperiment.databinding.ActivityStartViewAvtivityBinding
 import org.json.JSONArray
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -37,10 +38,12 @@ class StartViewActivity : AppCompatActivity() {
         db.execSQL("delete from weather")
         val cursor=db.rawQuery("select name from City",null)
         cursor.moveToNext()
-        val place=cursor.getString(0).split("&")
-        Location.province=place[0]
-        Location.city=place[1]
-        Location.district=place[2]
+        if(cursor.moveToFirst()){
+            val place=cursor.getString(0).split("&")
+            Location.province=place[0]
+            Location.city=place[1]
+            Location.district=place[2]
+        }
         WeatherList.weather.clear()
         webGetCityCode()
     }
