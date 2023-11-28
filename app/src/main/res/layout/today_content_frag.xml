@@ -26,15 +26,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:text="27°"
+            android:text="27°C"
             android:textColor="@color/white"
-            android:textSize="70dp"/>
+            android:textSize="60dp"/>
         <TextView
             android:id="@+id/minTemp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:text="13°"
+            android:text="13°C"
             android:paddingLeft="10dp"
             android:textColor="@color/white"
             android:textSize="40dp"/>

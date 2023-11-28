@@ -111,6 +111,14 @@
                 android:text="close"
                 android:textSize="20sp"
                 android:textColor="@color/gray" />
+            <TextView
+                android:id="@+id/warning"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="请开启应用通知权限"
+                android:textColor="#FF0000"
+                android:visibility="invisible"/>
             <Switch
                 android:id="@+id/switchNotify"
                 android:layout_width="0dp"

@@ -1,18 +1,27 @@
 package com.example.thirdexperiment
 
+import android.Manifest
+import android.app.AppOpsManager
+import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Binder
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.provider.Settings
 import android.util.Log
 import android.view.MenuItem
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.example.thirdexperiment.databinding.ActivitySettingsBinding
 import com.lljjcoder.Interface.OnCityItemClickListener
 import com.lljjcoder.bean.CityBean
@@ -21,6 +30,9 @@ import com.lljjcoder.bean.ProvinceBean
 import com.lljjcoder.citywheel.CityConfig
 import com.lljjcoder.style.citylist.Toast.ToastUtils
 import com.lljjcoder.style.citypickerview.CityPickerView
+import java.lang.reflect.Field
+import java.lang.reflect.InvocationTargetException
+
 
 /*
 * settings界面
@@ -137,6 +149,8 @@ class SettingsActivity : AppCompatActivity() {
                 bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
 
                 if(Switch.status){
+                    //判断用户是否开启通知权限
+//                    checkNotificationPermission()
                     MyApplication.weatherService?.startService()
                 }else{
                     Log.d(TAG, "用户关闭了通知")
@@ -145,7 +159,7 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }
             // 跳转到过渡界面
-            var intent=Intent(this,WaitingActivity::class.java)
+            val intent=Intent(this,WaitingActivity::class.java)
             startActivity(intent)
         }
     }
@@ -171,5 +185,54 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun checkNotificationPermission() {
+        //静态常量权限码
+        val REQUEST_EXTERNAL_STORAGE = 101
+        //静态数组，具体权限
+        val PERMISSIONS_STORAGE = arrayOf(
+            "android.permission.POST_NOTIFICATIONS",
+            "android.permission.ACCESS_NOTIFICATION_POLICY",
+            "android.permission.VIBRATE",
+            "android.permission.READ_CONTACTS"
+        )
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "checkNotificationPermission: ")
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.POST_NOTIFICATIONS)) {
+                Log.d(TAG, "请开通相关权限")
+                Toast.makeText(this, "请开通相关权限，否则无法正常使用本应用！", Toast.LENGTH_SHORT).show()
+            }else{
+                //申请权限  参数1.context 2.具体权限 3.权限码
+                Log.d(TAG, "申请授权")
+                ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE)
+            }
+        } else {
+            Toast.makeText(this, "已授权！", Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "已授权")
+            //有权限再获取资源，否则获取也无法下载到本地
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            1-> {
+                if (grantResults.isNotEmpty() &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("MainActivity", "onRequestPermissionsResult: done")
+                    Toast.makeText(this, "你可以正常使用app", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.d("MainActivity", "onRequestPermissionsResult: failed")
+                    Toast.makeText(this, "你拒绝了权限，无法正常保存图片", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 }
