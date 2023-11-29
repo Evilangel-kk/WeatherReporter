@@ -1,5 +1,6 @@
 package com.example.thirdexperiment
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.PictureDrawable
 import android.os.Bundle
@@ -16,6 +17,8 @@ import com.example.thirdexperiment.databinding.WeatherListFragBinding
 import com.bumptech.glide.Glide
 import com.caverock.androidsvg.SVG
 import org.json.JSONArray
+import java.util.Calendar
+
 /*
 * 列表信息的fragment
 * 可用于手机主页面下部以及平板主页面左侧*/
@@ -77,6 +80,7 @@ class WeatherListFragment:Fragment() {
             }
             return holder
         }
+        @SuppressLint("DiscouragedApi")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             if(selectedItem==position){
                 holder.item.background = resources.getDrawable(R.color.lightblue)
@@ -85,12 +89,23 @@ class WeatherListFragment:Fragment() {
             }
             val weather = weatherList[position]
             holder.day.text = weather.dayOfWeek
-            holder.desc.text=weather.textDay
             holder.maxTemp.text=weather.max_temp
             holder.minTemp.text=weather.min_temp
-            var imageCode="black_"+weather.iconDay
+            val time=System.currentTimeMillis()
+            val mCalendar = Calendar.getInstance();
+            mCalendar.setTimeInMillis(time);
+            val hour = mCalendar.get(Calendar.HOUR);
+            val apm = mCalendar.get(Calendar.AM_PM);
+            var imageCode=""
+            if(hour>=6 && apm==1){
+                binding.desc.text=weather.textNight
+                imageCode="black_"+weather.iconNight
+            }else{
+                binding.desc.text=weather.textDay
+                imageCode="black_"+weather.iconDay
+            }
 
-            var resId:Int=resources.getIdentifier(imageCode, "raw", requireActivity().packageName)
+            val resId:Int=resources.getIdentifier(imageCode, "raw", requireActivity().packageName)
             val svgInputStream = resources.openRawResource(resId)
             val svg = SVG.getFromInputStream(svgInputStream)
             val pictureDrawable = PictureDrawable(svg.renderToPicture())

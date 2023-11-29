@@ -8,7 +8,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import com.example.thirdexperiment.WeatherList.weather
 import com.example.thirdexperiment.databinding.ActivityWeatherContentBinding
+import java.util.Calendar
 
 
 /*
@@ -83,6 +85,17 @@ class WeatherContentActivity : AppCompatActivity() {
 
     private fun getWeatherInfo():String{
         val w = WeatherList.weather[0];
-        return w.dayOfWeek+"\nMaxTemp: "+w.max_temp+"\nMinTemp: "+w.min_temp+"\n"+w.textDay
+        val time=System.currentTimeMillis()
+        val mCalendar = Calendar.getInstance();
+        mCalendar.setTimeInMillis(time);
+        val hour = mCalendar.get(Calendar.HOUR);
+        val apm = mCalendar.get(Calendar.AM_PM);
+        var desctext=""
+        if(hour>=6 && apm==1){
+            desctext=w.textNight
+        }else{
+            desctext=w.textDay
+        }
+        return w.dayOfWeek+"\nMaxTemp: "+w.max_temp+"\nMinTemp: "+w.min_temp+"\n"+desctext
     }
 }

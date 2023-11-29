@@ -16,6 +16,7 @@ import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
@@ -147,20 +148,36 @@ class SettingsActivity : AppCompatActivity() {
                 OldMsg.status=Switch.status
                 val serviceIntent = Intent(this, WeatherService::class.java)
                 bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-
+                Log.d(TAG, Switch.status.toString())
                 if(Switch.status){
                     //判断用户是否开启通知权限
-//                    checkNotificationPermission()
-                    MyApplication.weatherService?.startService()
+                    if(checkNotificationPermission()){
+                        MyApplication.weatherService?.startService()
+                        // 跳转到过渡界面
+                        val intent=Intent(this,WaitingActivity::class.java)
+                        startActivity(intent)
+                    }else{
+                        binding.warning.visibility= View.VISIBLE
+                        binding.editSelectedNotice.text="close"
+                        binding.switchNotify.isChecked=false
+                        Switch.status=false
+                        OldMsg.status=false
+                    }
+
                 }else{
                     Log.d(TAG, "用户关闭了通知")
+                    binding.warning.visibility=View.INVISIBLE
                     MyApplication.weatherService?.stopService()// 开关关闭，关闭通知服务
                     MyApplication.weatherService=null // 全局service置空
+                    // 跳转到过渡界面
+                    val intent=Intent(this,WaitingActivity::class.java)
+                    startActivity(intent)
                 }
+            }else{
+                // 跳转到过渡界面
+                val intent=Intent(this,WaitingActivity::class.java)
+                startActivity(intent)
             }
-            // 跳转到过渡界面
-            val intent=Intent(this,WaitingActivity::class.java)
-            startActivity(intent)
         }
     }
 
@@ -187,7 +204,7 @@ class SettingsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun checkNotificationPermission() {
+    private fun checkNotificationPermission(): Boolean {
         //静态常量权限码
         val REQUEST_EXTERNAL_STORAGE = 101
         //静态数组，具体权限
@@ -200,19 +217,11 @@ class SettingsActivity : AppCompatActivity() {
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "checkNotificationPermission: ")
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.POST_NOTIFICATIONS)) {
-                Log.d(TAG, "请开通相关权限")
-                Toast.makeText(this, "请开通相关权限，否则无法正常使用本应用！", Toast.LENGTH_SHORT).show()
-            }else{
-                //申请权限  参数1.context 2.具体权限 3.权限码
-                Log.d(TAG, "申请授权")
-                ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE)
-            }
+            return false
         } else {
             Toast.makeText(this, "已授权！", Toast.LENGTH_SHORT).show()
             Log.d(TAG, "已授权")
-            //有权限再获取资源，否则获取也无法下载到本地
+            return true
         }
     }
 

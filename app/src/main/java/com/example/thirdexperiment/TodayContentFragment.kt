@@ -1,5 +1,6 @@
 package com.example.thirdexperiment
 
+import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ColorFilter
@@ -18,6 +19,8 @@ import com.caverock.androidsvg.SVG
 import com.example.thirdexperiment.databinding.TodayContentFragBinding
 import com.example.thirdexperiment.databinding.WeatherContentFragBinding
 import java.io.InputStream
+import java.util.Calendar
+import kotlin.text.Typography.amp
 
 /*
 * 只有在手机上才会显示的fragment
@@ -30,14 +33,25 @@ class TodayContentFragment:Fragment() {
         return binding.root
     }
 
+    @SuppressLint("DiscouragedApi")
     fun refresh(weather: Weather) {
         binding.dayAnddate.text=weather.dayOfWeek+","+weather.date
         binding.maxTemp.text=weather.max_temp
         binding.minTemp.text=weather.min_temp
-        binding.desc.text=weather.textDay
-
-        var imageCode="white_"+weather.iconDay
-        var resId:Int=resources.getIdentifier(imageCode, "raw", requireActivity().packageName)
+        val time=System.currentTimeMillis()
+        val mCalendar = Calendar.getInstance();
+        mCalendar.setTimeInMillis(time);
+        val hour = mCalendar.get(Calendar.HOUR);
+        val apm = mCalendar.get(Calendar.AM_PM);
+        var imageCode=""
+        if(hour>=6 && apm==1){
+            binding.desc.text=weather.textNight
+            imageCode="white_"+weather.iconNight
+        }else{
+            binding.desc.text=weather.textDay
+            imageCode="white_"+weather.iconDay
+        }
+        val resId:Int=resources.getIdentifier(imageCode, "raw", requireActivity().packageName)
         val svgInputStream = resources.openRawResource(resId)
         val svg = SVG.getFromInputStream(svgInputStream)
         val pictureDrawable = PictureDrawable(svg.renderToPicture())

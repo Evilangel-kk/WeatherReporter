@@ -19,14 +19,12 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // 判断是否存在fragment即可判断是哪种屏幕宽度的设备
-        var isTwoPane = this.findViewById<View>(R.id.todayWeatherFrag) != null
+        val isTwoPane = this.findViewById<View>(R.id.todayWeatherFrag) != null
         if(isTwoPane) {
-            var weather=WeatherList.weather.get(0)
-            if(weather!=null){
-                // 将第一天的信息放入
-                val fragment = supportFragmentManager.findFragmentById(R.id.todayWeatherFrag) as TodayContentFragment
-                fragment.refresh(weather) //刷新TodayContentFragment界面
-            }
+            val weather=WeatherList.weather.get(0)
+            // 将第一天的信息放入
+            val fragment = supportFragmentManager.findFragmentById(R.id.todayWeatherFrag) as TodayContentFragment
+            fragment.refresh(weather) //刷新TodayContentFragment界面
         }
     }
 
