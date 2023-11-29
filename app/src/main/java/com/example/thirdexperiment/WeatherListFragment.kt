@@ -26,7 +26,7 @@ class WeatherListFragment:Fragment() {
     private lateinit var binding: WeatherListFragBinding
     private var isTwoPane=false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         binding=WeatherListFragBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -98,10 +98,10 @@ class WeatherListFragment:Fragment() {
             val apm = mCalendar.get(Calendar.AM_PM);
             var imageCode=""
             if(hour>=6 && apm==1){
-                binding.desc.text=weather.textNight
+                holder.desc.text=weather.textNight
                 imageCode="black_"+weather.iconNight
             }else{
-                binding.desc.text=weather.textDay
+                holder.desc.text=weather.textDay
                 imageCode="black_"+weather.iconDay
             }
 
